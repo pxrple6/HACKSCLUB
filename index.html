@@ -1,0 +1,106 @@
+<html>
+    <head>
+        <title>Simple Drawing Pad</title>
+        <style>
+        canvas {
+            border: 1px solid black;
+            display: block;
+            margin: 0 auto;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+                 background: linear-gradient(90deg, #f857a6) 0%, #ff5858 100% ;
+        }
+        .button-row {
+            display: flex;
+            gap: 12px;
+            margin: 16px 0;
+        }
+        button, input[type="color"] {
+            background: linear-gradient(90deg, #4e4d4d 0%, hsl(0, 0%, 100%) 100%);
+            border: 2px solid #bdbdbd;
+            color: #333;
+            padding: 10px 24px;
+            border-radius: 24px;
+            font-size: 1rem;
+            font-family: inherit;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+            transition: background 0.2s, box-shadow 0.2s;
+            outline: none;
+        }
+        button:hover, input[type="color"]:hover {
+            background: linear-gradient(90deg, #ffffff 0%, #e0e0e0 100%);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+        }
+
+
+        </style>
+    </head>
+    <body>
+        <h1> Lets Draw!!</h1>
+        <canvas id="drawing" width="500" height="500"></canvas>
+        <div class="button-row">
+            <button onclick="deleteCanvas()">Clear Canvas</button>
+            <button onclick="changeColor('blue')">Blue</button>
+            <button onclick="changeColor('red')">Red</button>
+            <button onclick="changeColor('purple')">Purple</button>
+            <input type="color" onchange="changeColor(this.value)">
+        </div>
+    </body>
+    <script> 
+        const canvas = document.getElementById('drawing');
+        const ctx = canvas.getContext('2d');
+        let drawing = false;
+    let currentColor = 'black';
+    function changeColor(color) {
+        currentColor = color;
+    }
+           
+        
+
+
+        function getMousePos(event) {
+            const rect = canvas.getBoundingClientRect();
+            return {
+                x: event.clientX - rect.left,
+                y: event.clientY - rect.top
+            };
+        }
+
+        canvas.addEventListener('mousedown', (event) => {
+            drawing = true;
+            const pos = getMousePos(event);
+            ctx.beginPath();
+            ctx.moveTo(pos.x, pos.y);
+        });
+
+        canvas.addEventListener('mousemove', (event) => {
+            if (!drawing) return;
+            ctx.lineWidth = 2;
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = currentColor;
+            const pos = getMousePos(event);
+            ctx.lineTo(pos.x, pos.y);
+            ctx.stroke();
+        });
+
+        canvas.addEventListener('mouseup', () => {
+            drawing = false;
+            ctx.closePath();
+        });
+
+        canvas.addEventListener('mouseout', () => {
+            drawing = false;
+            ctx.closePath();
+        });
+        function deleteCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawing = false;
+            ctx.closePath();
+        }
+    </script>
+</html>
