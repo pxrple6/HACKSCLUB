@@ -101,6 +101,34 @@
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             drawing = false;
             ctx.closePath();
-        }
+        } 
+        //mobile compatibility
+        canvas.addEventListener('touchstart', (event) => {
+            event.preventDefault();
+            drawing = true;
+            const pos = getMousePos(event.touches[0]);
+            ctx.beginPath();
+            ctx.moveTo(pos.x, pos.y);
+        });
+
+        canvas.addEventListener('touchmove', (event) => {
+            event.preventDefault();
+            if (!drawing) return;
+            ctx.lineWidth = 2;
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = currentColor;
+            const pos = getMousePos(event.touches[0]);
+            ctx.lineTo(pos.x, pos.y);
+            ctx.stroke();
+        });
+
+        canvas.addEventListener('touchend', () => {
+            drawing = false;
+            ctx.closePath();
+        });
+        canvas.addEventListener('touchcancel', () => {
+            drawing = false;
+            ctx.closePath();
+        });
     </script>
 </html>
